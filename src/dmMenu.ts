@@ -1,7 +1,6 @@
-import { MachineConfig, send, Action, assign } from "xstate";
+import { MachineConfig, send, Action } from "xstate";
 import { nluRequest } from "./index"
 import { dmMachine } from "./dmAppointment";
-import { resourceLimits } from "worker_threads";
 
 function say(text: string): Action<SDSContext, SDSEvent> {
     return send((_context: SDSContext) => ({ type: "SPEAK", value: text }))
@@ -28,7 +27,7 @@ export const dmMenu: MachineConfig<SDSContext, any, SDSEvent> = ({
             },
             states: {
                 prompt: {
-                    entry: say("What would you like to do?"),
+                    entry: say("Welcome! I can help you schedule a meeting, set an alarm and add to your to do list. What would you like to do?"),
                     on: { ENDSPEECH: "ask" }
                 },
                 ask: {
@@ -58,7 +57,8 @@ export const dmMenu: MachineConfig<SDSContext, any, SDSEvent> = ({
             initial: "prompt",
             states: {
                 prompt: {
-                    entry: say("OK. I will help you set a timer.")
+                    entry: say("OK. I will help you set a timer."),
+                    on: { ENDSPEECH: "#root.dm" }
                 }
             }
         },
@@ -66,7 +66,10 @@ export const dmMenu: MachineConfig<SDSContext, any, SDSEvent> = ({
             initial: "prompt",
             states: {
                 prompt: {
-                    entry: say("OK. Let's add to your to do list!")
+                    entry: say("OK. Let's add to your to do list!"),
+                    on: {
+                        ENDSPEECH: "#root.dm"
+                    }
                 },
             }
         }

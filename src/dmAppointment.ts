@@ -1,5 +1,5 @@
 import { MachineConfig, send, Action, assign } from "xstate";
-
+import { dmMenu } from "./dmMenu";
 
 function say(text: string): Action<SDSContext, SDSEvent> {
     return send((_context: SDSContext) => ({ type: "SPEAK", value: text }))
@@ -68,15 +68,10 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
     initial: 'init',
     states: {
         init: {
-            on: {
-                CLICK: 'welcome'
-            }
-        },
-        welcome: {
             initial: "prompt",
             on: { ENDSPEECH: "who" },
             states: {
-                prompt: { entry: say("Let's create an appointment") }
+                prompt: { entry: say("OK. Let's create an appointment!") }
             }
         },
         who: {
@@ -127,8 +122,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     entry: listen()
                 },
                 nomatch: {
-                    entry: say("Sorry I didn't catch that"),
-                    on: { ENDSPEECH: "prompt" }
+                    entry: say("Sorry I didn't catch that. On which day is your meeting?"),
+                    on: { ENDSPEECH: "ask" }
                 }
 
             }
@@ -160,8 +155,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     entry: listen()
                 },
                 nomatch: {
-                    entry: say("Sorry I didn't catch that"),
-                    on: { ENDSPEECH: "prompt" }
+                    entry: say("Sorry I didn't catch that. Will it take all day?"),
+                    on: { ENDSPEECH: "ask" }
                 }
 
             }
@@ -189,8 +184,8 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
                     entry: listen()
                 },
                 nomatch: {
-                    entry: say("Sorry I didn't catch that"),
-                    on: { ENDSPEECH: "prompt" }
+                    entry: say("Sorry I didn't catch that. What time is your meeting?"),
+                    on: { ENDSPEECH: "ask" }
                 }
 
             }
@@ -263,10 +258,12 @@ export const dmMachine: MachineConfig<SDSContext, any, SDSEvent> = ({
         },
         end: {
             initial: "prompt",
-            on: { ENDSPEECH: "who" },
             states: {
-                prompt: { entry: say("Your appointment has been created") }
+                prompt: {
+                    entry: say("Your appointment has been created. If you need help with something else, please click on the screen."),
+                    on: { ENDSPEECH: "#root.dm" }
+                }
             }
-        },
+        }
     }
 })
