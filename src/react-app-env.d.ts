@@ -9,10 +9,14 @@ interface SDSContext {
     person: string;
     day: string;
     time: string;
+    action: string;
+    object: string;
+    counter: any;
 }
 
 type SDSEvent =
     | { type: 'CLICK' }
+    | { type: 'MAXSPEECH' }
     | { type: 'RECOGNISED' }
     | { type: 'ASRRESULT', value: string }
     | { type: 'ENDSPEECH' }
