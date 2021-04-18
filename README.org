@@ -5,4 +5,7 @@ To run:
   npm start
 #+end_src
 
-See the file dmAppointmentPlus for Lab IV
+See the files src/dmAppointmentVG.ts and src/grammars/vgGrammar.ts for Lab IV VG-part.
+
+Ideal use: "(with) Monica/Chandler/Ross/Joey/Rachel/Phoebe (on) Monday/Tuesday/Wednesday/Thursday/Friday/Saturday/Sunday (at) ten/eleven/twelve/one/two/three/four/all day"
+The system allows over-answering and only asks for the missing slots if a request is incomplete.
